@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Donate</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: rgb(241, 237, 235);
+            color: #fff;
+        }
+
+        .container {
+            flex: 1;
+            padding: 20px;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            color: #333;
+        }
+
+        form input,
+        form select,
+        .phone-group {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            background: #ff7e5f;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .modal.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Please Fill The Details</h1>
+            <form id="donateForm" autocomplete="off">
+                <select name="donate" required>
+                    <option value="" disabled selected>Donate:</option>
+                    <option value="Books">Books</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Toys">Toys</option>
+                    <option value="Utensils">Utensils</option>
+                </select>
+                <input type="text" name="name" placeholder="Name" required />
+                <input type="number" name="quantity" placeholder="Quantity" required min="1" id="quantityInput" />
+                <input type="text" name="address" placeholder="Address/Building name" required />
+                <input type="text" name="sector" placeholder="Sector" required />
+                <div class="phone-group">
+                    <span>+91</span>
+                    <input type="tel" name="phone" placeholder="Phone No" required pattern="\d{10}" />
+                </div>
+                <h2>Book Collection Date:</h2>
+                <input type="datetime-local" id="collectionDateTime" name="collection" required />
+                <button type="submit" class="submit-button">Book Date</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <p>Successfully booked 😊</p>
+        <p>THANK YOU</p>
+        <button id="okButton">OK</button>
+    </div>
+
+    <div class="modal" id="timeModal">
+        <p>Please select a time between 9:00 AM and 8:00 PM.</p>
+        <button id="timeOkButton">OK</button>
+    </div>
+
+    <div class="modal" id="quantityModal">
+        <p>Please enter a positive quantity!</p>
+        <button id="quantityOkButton">OK</button>
+    </div>
+
+    <script>
+       const quantityInput = document.getElementById('quantityInput');
+const donateForm = document.getElementById('donateForm');
+const successModal = document.getElementById('successModal');
+const timeModal = document.getElementById('timeModal');
+const quantityModal = document.getElementById('quantityModal');
+const quantityOkButton = document.getElementById('quantityOkButton');
+const okButton = document.getElementById('okButton');
+const timeOkButton = document.getElementById('timeOkButton');
+
+// Close the quantity modal when clicking "OK"
+quantityOkButton.addEventListener('click', function () {
+    quantityModal.classList.remove('show');
+    quantityInput.value = 1;
+});
+
+// Close the time modal when clicking "OK"
+timeOkButton.addEventListener('click', function () {
+    timeModal.classList.remove('show'); // Hide the time modal
+});
+
+// Submit form with validation logic
+donateForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(donateForm);
+    const quantity = parseInt(formData.get('quantity'), 10);
+
+    if (isNaN(quantity) || quantity <= 0) {
+        quantityModal.classList.add('show');
+        return;
+    }
+
+    const collectionDateTime = new Date(formData.get('collection'));
+    const hours = collectionDateTime.getHours();
+    if (hours < 9 || hours >= 20) {
+        timeModal.classList.add('show');
+        return;
+    }
+
+    const donationData = {};
+    formData.forEach((value, key) => {
+        donationData[key] = value;
+    });
+
+    donationData.collection = donationData.collection.replace('T', ' ');
+
+    let donations = JSON.parse(localStorage.getItem('donations')) || [];
+    donations.push(donationData);
+    localStorage.setItem('donations', JSON.stringify(donations));
+
+    successModal.classList.add('show');
+    donateForm.reset();
+});
+
+okButton.addEventListener('click', function () {
+    window.location.href = "person.html"; 
+});
+
+    </script>
+</body>
+</html>

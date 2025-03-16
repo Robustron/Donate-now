@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <title>Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            color: #333;
+        }
+
+        .content h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #5151E5;
+        }
+
+        .content p {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-button i {
+            color: #fff;
+            font-size: 1.5em;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 250px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow: auto;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .nav-menu ul li {
+            margin: 20px 0;
+        }
+
+        .nav-menu ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-menu ul li a:hover {
+            color: #ff6f61;
+        }
+
+        .nav-menu ul li i {
+            margin-right: 8px;
+        }
+
+        .done-button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #5151E5;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .done-button:hover {
+            background-color: #72EDF2;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-button" id="toggleMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+        <ul>
+            <li><i class="fas fa-home"></i><a href="home.html">Home</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="about.html">About</a></li>
+            <li><i class="fas fa-envelope"></i><a href="contact.html">Contact</a></li>
+            <li><i class="fas fa-hands-helping"></i><a href="volu.html">Volunteering</a></li>
+            <li><i class="fas fa-star"></i><a href="review.html">Reviews</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="content" id="detailsContainer"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleMenuButton = document.getElementById('toggleMenu');
+            var navMenu = document.getElementById('navMenu');
+
+            var enteredSector = parseInt(localStorage.getItem('enteredSector'), 10);
+            var storedDonations = JSON.parse(localStorage.getItem('donations')) || [];
+            var closestSector = storedDonations.reduce((closest, donation) => {
+                var donationSector = parseInt(donation.sector, 10);
+                var currentDiff = Math.abs(donationSector - enteredSector);
+                var closestDiff = Math.abs(parseInt(closest.sector, 10) - enteredSector);
+                return currentDiff < closestDiff ? donation : closest;
+            }, storedDonations[0] || { sector: 'N/A' });
+
+            var detailsContainer = document.getElementById('detailsContainer');
+
+            if (!closestSector || closestSector.sector === 'N/A') {
+                detailsContainer.innerHTML = '<p>No donation details found.</p>';
+            } else {
+                detailsContainer.innerHTML = `
+                    <h1>Closest Donation Details</h1>
+                    <p><strong>Name:</strong> ${closestSector.name}</p>
+                    <p><strong>Address:</strong> ${closestSector.address}</p>
+                    <p><strong>Sector:</strong> ${closestSector.sector}</p>
+                    <p><strong>Phone:</strong> ${closestSector.phone}</p>
+                    <button class="done-button" id="doneButton">Done</button>
+                `;
+            }
+
+            toggleMenuButton.addEventListener('click', function() {
+                navMenu.classList.toggle('open');
+            });
+
+            document.getElementById('doneButton').addEventListener('click', function() {
+                var finalData = {
+                    volunteer: JSON.parse(localStorage.getItem('volunteerData')),
+                    details: closestSector
+                };
+                localStorage.setItem('finalData', JSON.stringify(finalData));
+                window.location.href = 'final.html';
+            });
+        });
+    </script>
+</body>
+</html>

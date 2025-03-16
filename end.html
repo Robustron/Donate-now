@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Details</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+            color: #fff;
+        }
+
+        .content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #5151E5;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-button i {
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow: auto;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .nav-menu ul li {
+            margin: 20px 0;
+        }
+
+        .nav-menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .nav-menu ul li a:hover {
+            color: #ff6f61;
+        }
+
+        .nav-menu ul li i {
+            margin-right: 8px;
+        }
+
+        .submit-button {
+            border: 2px solid #5151E5;
+            border-radius: 5px;
+            color: #333;
+            background-color: #fff;
+            padding: 15px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #5151E5;
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal button {
+            background: #5151E5;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .modal button:hover {
+            background: #4040a0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-button" id="toggleMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+        <ul>
+            <li><i class="fas fa-home"></i><a href="home.html"> Home</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="about.html"> About</a></li>
+            <li><i class="fas fa-envelope"></i><a href="contact.html"> Contact</a></li>
+            <li><i class="fas fa-star"></i><a href="admin.html"> Menu</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Final Details</h1>
+        <h2>Volunteer Information</h2>
+        <table id="volunteerTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Sector</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Donation Details</h2>
+        <table id="donationTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Sector</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="modal" id="successModal">
+        <p>Successfully submitted!</p>
+        <button id="okButton">OK</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var finalData = JSON.parse(localStorage.getItem('finalData'));
+
+            if (finalData) {
+                var volunteerTable = document.getElementById('volunteerTable').querySelector('tbody');
+                var donationTable = document.getElementById('donationTable').querySelector('tbody');
+
+                if (finalData.volunteer) {
+                    var volunteerRow = document.createElement('tr');
+                    volunteerRow.innerHTML = `
+                        <td>${finalData.volunteer.name}</td>
+                        <td>${finalData.volunteer.address}</td>
+                        <td>${finalData.volunteer.sector}</td>
+                        <td>${finalData.volunteer.phone}</td>
+                    `;
+                    volunteerTable.appendChild(volunteerRow);
+                }
+
+                if (finalData.details) {
+                    var donationRow = document.createElement('tr');
+                    donationRow.innerHTML = `
+                        <td>${finalData.details.name}</td>
+                        <td>${finalData.details.address}</td>
+                        <td>${finalData.details.sector}</td>
+                        <td>${finalData.details.phone}</td>
+                    `;
+                    donationTable.appendChild(donationRow);
+                }
+            }
+
+            var toggleMenuButton = document.getElementById('toggleMenu');
+            var navMenu = document.getElementById('navMenu');
+
+            toggleMenuButton.addEventListener('click', function() {
+                navMenu.classList.toggle('open');
+            });
+
+            var submitButton = document.getElementById('submitButton');
+            var successModal = document.getElementById('successModal');
+            var okButton = document.getElementById('okButton');
+
+            submitButton.addEventListener('click', function() {
+                successModal.classList.add('show');
+            });
+
+            okButton.addEventListener('click', function() {
+                window.location.href = 'person.html';
+            });
+        });
+    </script>
+</body>
+</html>

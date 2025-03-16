@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Reviews</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color:darksalmon;            color: #fff;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .content h1 {
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            background: #ff7e5f;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background: #feb47b;
+        }
+
+        .reviews {
+            margin-top: 20px;
+            text-align: left;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .review {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .review .stars {
+            color: #ff7e5f;
+        }
+
+        .review button.delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .review button.delete-button:hover {
+            background: #ff1a1a;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-button i {
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow: auto;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .nav-menu ul li {
+            margin: 20px 0;
+        }
+
+        .nav-menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            transition: color 0.3s;
+        }
+
+        .nav-menu ul li a:hover {
+            color: #ff6f61;
+        }
+
+        .nav-menu ul li i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-button" id="toggleMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+        <ul>
+            <li><i class="fas fa-home"></i><a href="index.html"> Home</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="about.html"> About</a></li>
+            <li><i class="fas fa-envelope"></i><a href="contact.html"> Contact</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="login.html">login</a></li>
+
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <h1>Submit Your Review</h1>
+            <form id="reviewForm">
+                <textarea name="review" placeholder="Enter your review here..." required></textarea>
+                <label for="rating">Rating:</label>
+                <select name="rating" id="rating" required>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="1">⭐</option>
+                </select>
+                <button type="submit" class="submit-button">Post Review</button>
+            </form>
+
+            <div class="reviews" id="reviews">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var reviewForm = document.getElementById('reviewForm');
+            var reviewsContainer = document.getElementById('reviews');
+            
+            var savedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            savedReviews.forEach(function(review, index) {
+                displayReview(review, index);
+            });
+
+            reviewForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                var reviewText = reviewForm.querySelector('textarea[name="review"]').value;
+                var rating = reviewForm.querySelector('select[name="rating"]').value;
+
+                var newReview = {
+                    text: reviewText,
+                    rating: rating,
+                    date: new Date().toLocaleString()
+                };
+
+                
+                savedReviews.push(newReview);
+                localStorage.setItem('reviews', JSON.stringify(savedReviews));
+
+                displayReview(newReview, savedReviews.length - 1);
+
+                reviewForm.reset();
+                reviewsContainer.scrollTop = reviewsContainer.scrollHeight; // Scroll to bottom of the reviews container
+            });
+
+            function displayReview(review, index) {
+                var reviewDiv = document.createElement('div');
+                reviewDiv.classList.add('review');
+                
+                var stars = '⭐'.repeat(parseInt(review.rating));
+                reviewDiv.innerHTML = `
+                    <div class="stars">${stars}</div>
+                    <p>${review.text}</p>
+                    <small>Posted on: ${review.date}</small>
+                    <button class="delete-button" data-index="${index}">Delete</button>
+                `;
+
+                reviewsContainer.appendChild(reviewDiv);
+
+                
+                reviewDiv.querySelector('.delete-button').addEventListener('click', function() {
+                    var reviewIndex = this.getAttribute('data-index');
+                    deleteReview(reviewIndex);
+                });
+            }
+
+            function deleteReview(index) {
+                savedReviews.splice(index, 1);
+                localStorage.setItem('reviews', JSON.stringify(savedReviews));
+                reviewsContainer.innerHTML = '';
+                savedReviews.forEach(function(review, index) {
+                    displayReview(review, index);
+                });
+            }
+
+            var toggleMenuButton = document.getElementById('toggleMenu');
+            var navMenu = document.getElementById('navMenu');
+            
+            toggleMenuButton.addEventListener('click', function() {
+                navMenu.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

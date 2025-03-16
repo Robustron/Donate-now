@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: darksalmon;
+            color: #fff;
+            position: relative;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu-button i {
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -250px; 
+            width: 250px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 30px;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nav-menu ul li {
+            margin: 20px 0;
+        }
+
+        .nav-menu ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu ul li a:hover {
+            color: #ff6f61;
+        }
+
+        .nav-menu ul li i {
+            margin-right: 8px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 25px;
+            margin: 0 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            max-height: 70%;
+            min-height: 60%;
+            text-align: center;
+            max-width: 150%;
+        }
+
+        .container h1 {
+            margin-bottom: 20px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            background: #ff7e5f;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background: #feb47b;
+        }
+
+        .instruction {
+            margin-bottom: 0;
+            color: #333;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-button" id="toggleMenu">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="nav-menu" id="navMenu">
+        <ul>
+            <li><i class="fas fa-home"></i><a href="index.html"> Home</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="about.html"> About</a></li>
+            <li><i class="fas fa-envelope"></i><a href="contact.html"> Contact</a></li>
+            <li><i class="fas fa-user-alt"></i><a href="login.html"> Login</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>Sign In</h1>
+        <p class="instruction">Enter your credentials to access the site.</p>
+        <form id="signinForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="submit-button">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('signinForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            // Check if username and password match the criteria
+            if (username === 'admin' && password === 'don') {
+                window.location.href = 'admin.html'; 
+            } else {
+                window.location.href = 'person.html'; 
+            }
+        });
+
+        document.getElementById('toggleMenu').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

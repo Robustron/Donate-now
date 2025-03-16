@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <title>Items Can Be Donated Here</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color:darksalmon;      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .ngo-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .ngo-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(238, 231, 231, 0.1);
+      width: 300px;
+      margin: 20px;
+      padding: 20px;
+      text-align: center;
+    }
+    .ngo-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .ngo-details {
+      margin-top: 15px;
+    }
+    .ngo-name {
+      font-size: 20px;
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .rating {
+      color: #f39c12;
+      margin: 5px 0;
+    }
+    .contact {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+    .button-group button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .button-group button:hover {
+      background-color: #2980b9;
+    }
+    
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1001; 
+    }
+    .menu-button i {
+      color: white;
+      font-size: 1.5em;
+    }
+
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      left: -100%; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0, 0, 0, 0.6); 
+      transition: left 0.3s ease;
+      z-index: 1000; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .nav-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+    .nav-menu ul li {
+      margin: 20px 0;
+    }
+    .nav-menu ul li a {
+      color: white;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    
+    .nav-menu.open {
+      left: 0;
+    }
+    .nav-menu ul li i {
+  color: white;
+}
+
+  </style>
+</head>
+<body>
+
+
+  <div class="menu-button" id="toggleMenu">
+    <i class="fas fa-bars"></i>
+  </div>
+
+  <div class="nav-menu" id="navMenu">
+    <ul>
+      <li><i class="fas fa-home"></i><a href="contact.html"> Contact</a></li>
+      <li><i class="fas fa-user-alt"></i><a href="about.html"> About</a></li>
+      <li><i class="fas fa-star"></i><a href="review.html"> Reviews</a></li>
+      <li><i class="fas fa-user-alt"></i><a href="login.html"> Login</a></li>
+      <li><i class="fas fa-home"></i><a href="index.html">Home</a></li>
+    </ul>
+  </div>
+
+  <h1>Items Can Be Donated Here</h1>
+
+  <div class="ngo-container">
+    <div class="ngo-card">
+      <img src="https://www.thenewmystics.com/Images/content/1000000236/1000182403.jpg" alt="Girija Foundation">
+      <div class="ngo-details">
+        <div class="ngo-name">Girija Foundation</div>
+        <div class="rating">Rating: 4.3 ★</div>
+        <div class="contact">Location: Gurukul road, Sector-20, Kharghar</div>
+        <div class="contact">Phone: 07405169492</div>
+      </div>
+    </div>
+
+    <div class="ngo-card">
+      <img src="https://content.jdmagicbox.com/v2/comp/mumbai/p6/022pxx22.xx22.120813152539.y4p6/catalogue/desire-society-goregaon-west-mumbai-orphanages-iahqx.jpg" alt="Sukarma Charitable Trust">
+      <div class="ngo-details">
+        <div class="ngo-name">Sukarma Charitable Trust</div>
+        <div class="rating">Rating: 4.6 ★</div>
+        <div class="contact">Location: Sukha Swapna Pratishthan, Sector 7, Navi Mumbai</div>
+        <div class="contact">Phone: 08904178778</div>
+      </div>
+    </div>
+
+    
+    <div class="ngo-card">
+      <img src="https://nabatara.org/wp-content/uploads/2021/10/Orphanages.jpg" alt="Amcha Ghar">
+      <div class="ngo-details">
+        <div class="ngo-name">Amcha Ghar</div>
+        <div class="rating">Rating: 4.4 ★</div>
+        <div class="contact">Location: Sector-12, Kharghar</div>
+        <div class="contact">Phone: 08123871098</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const toggleMenu = document.getElementById("toggleMenu");
+    const navMenu = document.getElementById("navMenu");
+
+    toggleMenu.addEventListener("click", () => {
+      navMenu.classList.toggle("open");
+    });
+  </script>
+</body>
+</html>
